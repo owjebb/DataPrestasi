@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pendataan Prestasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">📊 Sistem Pendataan Prestasi</h1>
+            <p class="text-gray-600">Kelola dan pantau semua pencapaian dengan mudah</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex justify-center mb-8">
+            <div class="bg-white rounded-lg p-1 shadow-md">
+                <button id="dashboardTab" class="px-6 py-2 rounded-md font-medium transition-all duration-200 bg-blue-500 text-white">
+                    Dashboard
+                </button>
+                <button id="addTab" class="px-6 py-2 rounded-md font-medium transition-all duration-200 text-gray-600 hover:text-blue-500">
+                    Tambah Prestasi
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="space-y-6">
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total Prestasi</p>
+                            <p id="totalCount" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <span class="text-2xl">🏆</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Juara 1</p>
+                            <p id="goldCount" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <span class="text-2xl">🥇</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-yellow-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Juara 2</p>
+                            <p id="silverCount" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <span class="text-2xl">🥈</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-orange-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Juara 3</p>
+                            <p id="bronzeCount" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="bg-orange-100 p-3 rounded-full">
+                            <span class="text-2xl">🥉</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="flex-1">
+                        <input type="text" id="searchInput" placeholder="Cari berdasarkan nama, lomba, atau kategori..." 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <select id="filterRank" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Peringkat</option>
+                        <option value="Juara 1">Juara 1</option>
+                        <option value="Juara 2">Juara 2</option>
+                        <option value="Juara 3">Juara 3</option>
+                        <option value="Juara Harapan 1">Juara Harapan 1</option>
+                        <option value="Juara Harapan 2">Juara Harapan 2</option>
+                        <option value="Juara Harapan 3">Juara Harapan 3</option>
+                        <option value="Juara Favorit">Juara Favorit</option>
+                        <option value="Peserta Terbaik">Peserta Terbaik</option>
+                        <option value="Finalis">Finalis</option>
+                        <option value="Semi Finalis">Semi Finalis</option>
+                        <option value="Partisipan">Partisipan</option>
+                    </select>
+                    <select id="filterLevel" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Tingkat</option>
+                        <option value="Sekolah">Sekolah</option>
+                        <option value="Kecamatan">Kecamatan</option>
+                        <option value="Kabupaten">Kabupaten</option>
+                        <option value="Provinsi">Provinsi</option>
+                        <option value="Nasional">Nasional</option>
+                        <option value="Internasional">Internasional</option>
+                    </select>
+                </div>
+
+                <!-- Achievement List -->
+                <div id="achievementList" class="space-y-4">
+                    <div class="text-center py-12 text-gray-500">
+                        <span class="text-6xl mb-4 block">📋</span>
+                        <p class="text-lg">Belum ada data prestasi</p>
+                        <p class="text-sm">Klik "Tambah Prestasi" untuk menambahkan data baru</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Achievement Section -->
+        <div id="addSection" class="hidden">
+            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Tambah Prestasi Baru</h2>
+                
+                <form id="achievementForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Peserta</label>
+                            <input type="text" id="participantName" required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                            <input type="text" id="participantClass" required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lomba</label>
+                        <input type="text" id="competitionName" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                            <select id="category" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih Kategori</option>
+                                <option value="Akademik">Akademik</option>
+                                <option value="Olahraga">Olahraga</option>
+                                <option value="Seni">Seni</option>
+                                <option value="Teknologi">Teknologi</option>
+                                <option value="Bahasa">Bahasa</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tingkat</label>
+                            <select id="level" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih Tingkat</option>
+                                <option value="Sekolah">Sekolah</option>
+                                <option value="Kecamatan">Kecamatan</option>
+                                <option value="Kabupaten">Kabupaten</option>
+                                <option value="Provinsi">Provinsi</option>
+                                <option value="Nasional">Nasional</option>
+                                <option value="Internasional">Internasional</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Peringkat</label>
+                            <select id="rank" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih Peringkat</option>
+                                <option value="Juara 1">Juara 1</option>
+                                <option value="Juara 2">Juara 2</option>
+                                <option value="Juara 3">Juara 3</option>
+                                <option value="Juara Harapan 1">Juara Harapan 1</option>
+                                <option value="Juara Harapan 2">Juara Harapan 2</option>
+                                <option value="Juara Harapan 3">Juara Harapan 3</option>
+                                <option value="Juara Favorit">Juara Favorit</option>
+                                <option value="Peserta Terbaik">Peserta Terbaik</option>
+                                <option value="Finalis">Finalis</option>
+                                <option value="Semi Finalis">Semi Finalis</option>
+                                <option value="Partisipan">Partisipan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
+                            <input type="date" id="date" required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Penyelenggara</label>
+                        <input type="text" id="organizer" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Keterangan (Opsional)</label>
+                        <textarea id="description" rows="3"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  placeholder="Tambahkan keterangan tambahan..."></textarea>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button type="submit" 
+                                class="flex-1 bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200">
+                            Simpan Prestasi
+                        </button>
+                        <button type="button" id="resetForm"
+                                class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let achievements = JSON.parse(localStorage.getItem('achievements')) || [];
+
+        // DOM elements
+        const dashboardTab = document.getElementById('dashboardTab');
+        const addTab = document.getElementById('addTab');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const addSection = document.getElementById('addSection');
+        const achievementForm = document.getElementById('achievementForm');
+        const achievementList = document.getElementById('achievementList');
+        const searchInput = document.getElementById('searchInput');
+        const filterRank = document.getElementById('filterRank');
+        const filterLevel = document.getElementById('filterLevel');
+
+        // Tab switching
+        dashboardTab.addEventListener('click', () => {
+            showDashboard();
+        });
+
+        addTab.addEventListener('click', () => {
+            showAddForm();
+        });
+
+        function showDashboard() {
+            dashboardTab.className = 'px-6 py-2 rounded-md font-medium transition-all duration-200 bg-blue-500 text-white';
+            addTab.className = 'px-6 py-2 rounded-md font-medium transition-all duration-200 text-gray-600 hover:text-blue-500';
+            dashboardSection.classList.remove('hidden');
+            addSection.classList.add('hidden');
+            updateStatistics();
+            renderAchievements();
+        }
+
+        function showAddForm() {
+            addTab.className = 'px-6 py-2 rounded-md font-medium transition-all duration-200 bg-blue-500 text-white';
+            dashboardTab.className = 'px-6 py-2 rounded-md font-medium transition-all duration-200 text-gray-600 hover:text-blue-500';
+            addSection.classList.remove('hidden');
+            dashboardSection.classList.add('hidden');
+        }
+
+        // Form submission
+        achievementForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newAchievement = {
+                id: Date.now(),
+                participantName: document.getElementById('participantName').value,
+                participantClass: document.getElementById('participantClass').value,
+                competitionName: document.getElementById('competitionName').value,
+                category: document.getElementById('category').value,
+                level: document.getElementById('level').value,
+                rank: document.getElementById('rank').value,
+                date: document.getElementById('date').value,
+                organizer: document.getElementById('organizer').value,
+                description: document.getElementById('description').value
+            };
+
+            achievements.push(newAchievement);
+            localStorage.setItem('achievements', JSON.stringify(achievements));
+            
+            achievementForm.reset();
+            alert('Prestasi berhasil ditambahkan!');
+            showDashboard();
+        });
+
+        // Reset form
+        document.getElementById('resetForm').addEventListener('click', () => {
+            achievementForm.reset();
+        });
+
+        // Search and filter
+        searchInput.addEventListener('input', renderAchievements);
+        filterRank.addEventListener('change', renderAchievements);
+        filterLevel.addEventListener('change', renderAchievements);
+
+        // Update statistics
+        function updateStatistics() {
+            const total = achievements.length;
+            const gold = achievements.filter(a => a.rank === 'Juara 1').length;
+            const silver = achievements.filter(a => a.rank === 'Juara 2').length;
+            const bronze = achievements.filter(a => a.rank === 'Juara 3').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('goldCount').textContent = gold;
+            document.getElementById('silverCount').textContent = silver;
+            document.getElementById('bronzeCount').textContent = bronze;
+        }
+
+        // Render achievements
+        function renderAchievements() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const rankFilter = filterRank.value;
+            const levelFilter = filterLevel.value;
+
+            let filtered = achievements.filter(achievement => {
+                const matchesSearch = achievement.participantName.toLowerCase().includes(searchTerm) ||
+                                    achievement.competitionName.toLowerCase().includes(searchTerm) ||
+                                    achievement.category.toLowerCase().includes(searchTerm);
+                const matchesRank = !rankFilter || achievement.rank === rankFilter;
+                const matchesLevel = !levelFilter || achievement.level === levelFilter;
+                
+                return matchesSearch && matchesRank && matchesLevel;
+            });
+
+            if (filtered.length === 0) {
+                achievementList.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <span class="text-6xl mb-4 block">🔍</span>
+                        <p class="text-lg">${achievements.length === 0 ? 'Belum ada data prestasi' : 'Tidak ada data yang sesuai'}</p>
+                        <p class="text-sm">${achievements.length === 0 ? 'Klik "Tambah Prestasi" untuk menambahkan data baru' : 'Coba ubah kata kunci pencarian atau filter'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            achievementList.innerHTML = filtered.map(achievement => {
+                const rankEmoji = {
+                    'Juara 1': '🥇',
+                    'Juara 2': '🥈', 
+                    'Juara 3': '🥉',
+                    'Juara Harapan 1': '🏅',
+                    'Juara Harapan 2': '🏅',
+                    'Juara Harapan 3': '🏅',
+                    'Juara Favorit': '⭐',
+                    'Peserta Terbaik': '🌟',
+                    'Finalis': '🎯',
+                    'Semi Finalis': '🎪',
+                    'Partisipan': '🎫'
+                };
+
+                const levelColor = {
+                    'Sekolah': 'bg-gray-100 text-gray-800',
+                    'Kecamatan': 'bg-blue-100 text-blue-800',
+                    'Kabupaten': 'bg-green-100 text-green-800',
+                    'Provinsi': 'bg-yellow-100 text-yellow-800',
+                    'Nasional': 'bg-red-100 text-red-800',
+                    'Internasional': 'bg-purple-100 text-purple-800'
+                };
+
+                return `
+                    <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-1">${achievement.competitionName}</h3>
+                                <p class="text-gray-600">${achievement.participantName} - ${achievement.participantClass}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-2xl">${rankEmoji[achievement.rank]}</span>
+                                    <span class="font-semibold text-gray-800">${achievement.rank}</span>
+                                </div>
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-medium ${levelColor[achievement.level]}">${achievement.level}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
+                            <div>
+                                <span class="font-medium">Kategori:</span><br>
+                                ${achievement.category}
+                            </div>
+                            <div>
+                                <span class="font-medium">Tanggal:</span><br>
+                                ${new Date(achievement.date).toLocaleDateString('id-ID')}
+                            </div>
+                            <div class="col-span-2">
+                                <span class="font-medium">Penyelenggara:</span><br>
+                                ${achievement.organizer}
+                            </div>
+                        </div>
+                        
+                        ${achievement.description ? `
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <span class="font-medium text-gray-700">Keterangan:</span>
+                                <p class="text-gray-600 mt-1">${achievement.description}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="flex justify-end mt-4">
+                            <button onclick="deleteAchievement(${achievement.id})" 
+                                    class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Delete achievement
+        function deleteAchievement(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus prestasi ini?')) {
+                achievements = achievements.filter(a => a.id !== id);
+                localStorage.setItem('achievements', JSON.stringify(achievements));
+                updateStatistics();
+                renderAchievements();
+            }
+        }
+
+        // Initialize
+        updateStatistics();
+        renderAchievements();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97e6103af648cdfe',t:'MTc1Nzc0OTkyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
